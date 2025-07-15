@@ -4,10 +4,12 @@ let snakeArr = [{x: 13, y: 15}];
 let food = {x: 6, y: 7};
 const eatSound = new Audio("sounds/eat-323883.mp3");
 const gameOverSound = new Audio("sounds/game-over-arcade-6435.mp3");
+const bgMusic = new Audio("sounds/background-music-224633.mp3");
+bgMusic.loop = true;
+bgMusic.volume = 0.1;
 
 function main(ctime) {
     window.requestAnimationFrame(main);
-    // console.log(ctime);
     if ((ctime - lastPaintTime)/1000 < 0.2)
         return;
     lastPaintTime = ctime;
@@ -31,10 +33,18 @@ function gameEngine() {
     //Game Over condition
     if (isCollide(snakeArr)) {
         gameOverSound.play();
+        bgMusic.pause();
+        bgMusic.currentTime = 0;
         alert("Game Over!!! Press any key to play again!");
         inputDir = {x: 0, y: 0};
         snakeArr = [{x: 13, y: 15}];
         score.textContent = "Score: 0";
+    }
+
+    // Start music only if inputDir is non-zero (game started)
+    if (inputDir.x !== 0 || inputDir.y !== 0) {
+        if (bgMusic.paused)
+            bgMusic.play();
     }
 
     //If you eat the food
